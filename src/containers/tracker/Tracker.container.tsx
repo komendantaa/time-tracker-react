@@ -18,14 +18,7 @@ class TrackerContainer extends React.PureComponent<any, IState> {
     super(props);
 
     this.state = {
-      currentTask: {
-        taskName: '',
-        projectName: '',
-        startDate: '',
-        spentTime: 0,
-        endDate: '',
-        inProcess: false,
-      },
+      currentTask: new Task(),
       log: [],
     };
   }
@@ -67,10 +60,16 @@ class TrackerContainer extends React.PureComponent<any, IState> {
     log.push(currentTask);
 
     this.setState({
-      log,
       currentTask: new Task(),
+      log: [...log],
     });
     clearInterval(this._intervalId);
+  };
+
+  onInputTaskName = ({ target }: any) => {
+    this.setState({
+      currentTask: { ...this.state.currentTask, taskName: target.value },
+    });
   };
 
   onSelectProject = ({ target }: any) => {
@@ -88,10 +87,11 @@ class TrackerContainer extends React.PureComponent<any, IState> {
           projects={this.projects}
           startTracking={this.startTracking}
           stopTracking={this.stopTracking}
+          onInputTaskName={this.onInputTaskName}
           onSelectProject={this.onSelectProject}
         />
         <hr />
-        <Log {...this.state} startTracking={this.startTracking} />
+        <Log log={this.state.log} startTracking={this.startTracking} />
       </div>
     );
   }
@@ -100,4 +100,5 @@ class TrackerContainer extends React.PureComponent<any, IState> {
     clearInterval(this._intervalId);
   }
 }
+
 export default TrackerContainer;

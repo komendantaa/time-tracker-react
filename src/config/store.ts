@@ -1,7 +1,9 @@
-import { createStore } from 'redux';
+import { createStore, DeepPartial } from 'redux';
 import rootReducer from 'reducers';
 
-const initialState = {};
+const initialState: DeepPartial<{ counter: number }> = {
+  counter: 0,
+};
 
 const store = createStore(rootReducer, initialState);
 

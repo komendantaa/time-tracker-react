@@ -2,7 +2,6 @@ import React from 'react';
 import Task from 'models/Task.class';
 
 interface IProps {
-  currentTask: Task;
   log: Task[];
   startTracking(closedTask?: Task): void;
 }

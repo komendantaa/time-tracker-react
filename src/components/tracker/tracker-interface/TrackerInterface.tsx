@@ -6,6 +6,7 @@ interface IProps {
   projects: string[];
   startTracking(closedTask?: Task): void;
   stopTracking(): void;
+  onInputTaskName(ev: any): void;
   onSelectProject(ev: any): void;
 }
 
@@ -22,6 +23,7 @@ class TrackerInterface extends React.PureComponent<IProps, Task> {
       projects,
       startTracking,
       stopTracking,
+      onInputTaskName,
       onSelectProject,
     } = this.props;
 
@@ -34,6 +36,8 @@ class TrackerInterface extends React.PureComponent<IProps, Task> {
                 type="text"
                 className="form-control"
                 placeholder="What are you working on"
+                value={currentTask.taskName}
+                onChange={onInputTaskName}
               />
             </div>
           </div>
