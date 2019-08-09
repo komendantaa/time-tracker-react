@@ -8,10 +8,14 @@ import 'index.css';
 
 import store from 'config/store';
 import Router from 'routes/MainRouter';
+import { TrackerServiceProvider } from 'hoc/withTrackerService/trackerServiceContext';
+import { trackerServiceInstance } from 'services/trackerService';
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router />
+    <TrackerServiceProvider value={trackerServiceInstance}>
+      <Router />
+    </TrackerServiceProvider>
   </Provider>,
   document.getElementById('root')
 );

@@ -1,34 +1,27 @@
-import React from 'react';
-
-import TrackerInterface from 'components/tracker/tracker-interface/TrackerInterface';
-import Log from 'components/tracker/log/Log';
 import Task from 'models/Task.class';
-import { setInterval, clearInterval } from 'timers';
+import store from '../config/store';
+import { trackerStarted } from '../ actions';
+import { clearInterval, setInterval } from 'timers';
 
-interface IState {
-  currentTask: Task;
-  log: Task[];
-}
-
-class TrackerContainer extends React.PureComponent<any, IState> {
+class TrackerService {
   private _intervalId!: NodeJS.Timeout;
   projects = ['...', 'timer', 'nothing', 'third'];
+  state: any = {
+    currentTask: new Task(),
+    log: [],
+  };
 
-  constructor(props: any) {
-    super(props);
-    console.log('TrackerContainer', props);
-
-
-    this.state = {
-      currentTask: new Task(),
-      log: [],
-    };
+  constructor() {
+    console.log('new TrackerService instance created');
   }
 
-  componentDidMount() {}
+  click(task: Task) {
+    console.log(task, 'click');
+    store.dispatch(trackerStarted(task));
+  }
 
-  componentWillReceiveProps() {
-    console.log('init');
+  setState(some: any) {
+    console.log(some);
   }
 
   startTracking = (closedTask?: Task) => {
@@ -85,28 +78,8 @@ class TrackerContainer extends React.PureComponent<any, IState> {
       currentTask: { ...this.state.currentTask, projectName: target.value },
     });
   };
-
-  render() {
-    return (
-      <div className="container">
-        <hr />
-        <TrackerInterface
-          currentTask={this.state.currentTask}
-          projects={this.projects}
-          startTracking={this.startTracking}
-          stopTracking={this.stopTracking}
-          onInputTaskName={this.onInputTaskName}
-          onSelectProject={this.onSelectProject}
-        />
-        <hr />
-        <Log log={this.state.log} startTracking={this.startTracking} />
-      </div>
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this._intervalId);
-  }
 }
 
-export default TrackerContainer;
+const trackerServiceInstance = new TrackerService();
+
+export { trackerServiceInstance, TrackerService };

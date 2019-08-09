@@ -1,10 +1,11 @@
-import { createStore, DeepPartial } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import rootReducer from 'reducers';
 
-const initialState: DeepPartial<{ counter: number }> = {
-  counter: 0,
+const logMiddleware = ({ getState }: any) => (next: any) => (action: any) => {
+  console.log(action.type, getState());
+  return next(action);
 };
 
-const store = createStore(rootReducer, initialState);
+const store = createStore(rootReducer, applyMiddleware(logMiddleware));
 
 export default store;
