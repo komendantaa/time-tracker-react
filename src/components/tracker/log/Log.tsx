@@ -4,21 +4,17 @@ import { connect } from 'react-redux';
 import Task from 'models/Task.class';
 import { TrackerService } from 'services/trackerService';
 import { TrackerServiceConsumer } from 'hoc/withTrackerService/trackerServiceContext';
-import { trackerStarted } from '../../../ actions';
+import { getFormattedDate, getFormattedCounter } from 'helpers';
+import { DATE_FORMAT } from 'constants/index';
 
 interface IProps {
   log?: Task[];
-  click?: any;
-  startTracking?(closedTask?: Task): void;
 }
 
-const Log = (props: IProps) => {
-  const { log = [], startTracking = () => null } = props;
-  console.log('LOG', props, startTracking);
-
+const Log = ({ log = [] }: IProps) => {
   return (
     <TrackerServiceConsumer>
-      {({ click }: TrackerService) => {
+      {({ startTracking }: TrackerService) => {
         return (
           <>
             <h2>Today</h2>
@@ -33,16 +29,26 @@ const Log = (props: IProps) => {
                 </tr>
               </thead>
               <tbody>
-                {log.map((task, i) => {
-                  const { taskName, projectName, spentTime, startDate } = task;
+                {log.map((task) => {
+                  const {
+                    id,
+                    taskName,
+                    projectName,
+                    spentTime,
+                    startDate,
+                    endDate,
+                  } = task;
                   return (
-                    <tr key={i}>
+                    <tr key={id}>
                       <td>{taskName}</td>
                       <td>{projectName}</td>
                       <td onClick={startTracking.bind(null, task)}>></td>
-                      <td onClick={click.bind(null, task)}>></td>
-                      <td>{spentTime}</td>
-                      <td>{startDate}</td>
+                      <td>{getFormattedCounter(spentTime)}</td>
+                      <td>
+                        {getFormattedDate(startDate, DATE_FORMAT)}
+                        {' - '}
+                        {getFormattedDate(endDate, DATE_FORMAT)}
+                      </td>
                     </tr>
                   );
                 })}
@@ -59,17 +65,4 @@ const mapStateToProps = ({ log }: IState): any => {
   return { log };
 };
 
-// const mapDispatchToProps = (dispatch: any, { startTracking }: IProps) => {
-//   return {
-//     startTracking,
-//   };
-// };
-
-const mapDispatchToProps = {
-  startTracking: trackerStarted,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Log);
+export default connect(mapStateToProps)(Log);
