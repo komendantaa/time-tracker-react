@@ -1,4 +1,4 @@
-import Task from 'models/Task.class';
+import Task from 'models/Task';
 import store from 'config/store';
 import {
   startTracking,
@@ -8,17 +8,21 @@ import {
   increaseSpentTimeCounter,
   addTaskToLog,
 } from 'actions';
+import { MS_IN_SECOND } from 'constants/duration';
 
 class TrackerService {
   private _intervalId!: NodeJS.Timeout;
-  projects = ['...', 'timer', 'nothing', 'third'];
+  projects: IProject[] = [
+    { id: 1, title: '...' },
+    { id: 2, title: 'timer' },
+    { id: 3, title: 'nothing' },
+    { id: 4, title: 'third' },
+  ];
 
-  constructor() {
-    console.log('new TrackerService instance created');
-  }
-
-  startTracking = (closedTask?: Task) => {
+  startTracking = (closedTask?: Task | null) => {
     let { currentTask } = store.getState();
+
+    if (currentTask.inProcess) return;
 
     // Add new or duplicate existed
     if (closedTask && (!closedTask.inProcess || closedTask.endDate)) {
@@ -26,18 +30,25 @@ class TrackerService {
     }
 
     currentTask.inProcess = true;
-    currentTask.startDate = new Date().toISOString() + '';
+    currentTask.startDate = new Date().toISOString();
 
     store.dispatch(startTracking(currentTask));
 
     this._intervalId = setInterval(() => {
       store.dispatch(increaseSpentTimeCounter());
-    }, 1000);
+    }, MS_IN_SECOND);
   };
 
   stopTracking = () => {
-    const { currentTask } = store.getState();
-    currentTask.endDate = new Date().toISOString();
+    const currentTask = { ...store.getState().currentTask };
+
+    const currDate = new Date();
+    // normalize spent time before push to log
+    currentTask.spentTime = +(
+      (+currDate - +new Date(currentTask.startDate)) /
+      MS_IN_SECOND
+    ).toFixed(0);
+    currentTask.endDate = currDate.toISOString();
 
     store.dispatch(stopTracking());
     store.dispatch(addTaskToLog(currentTask));

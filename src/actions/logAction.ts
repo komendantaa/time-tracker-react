@@ -1,5 +1,5 @@
-import Task from 'models/Task.class';
-import { LOG_TASK_ADDED } from '../constants';
+import Task from 'models/Task';
+import { LOG_TASK_ADDED } from 'constants/logs';
 
 export const addTaskToLog = (task: Task) => {
   return {

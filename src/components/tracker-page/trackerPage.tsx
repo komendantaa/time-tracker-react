@@ -1,6 +1,6 @@
 import React from 'react';
 import Log from '../tracker/log/Log';
-import TrackerInterface from '../tracker/tracker-interface/TrackerInterface';
+import TrackerInterface from '../tracker/TrackerComponent';
 
 const TrackerPage = () => {
   return (

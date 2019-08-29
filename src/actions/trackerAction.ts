@@ -1,41 +1,35 @@
-import Task from 'models/Task.class';
-import {
-  TASK_NAME_UPDATED,
-  TASK_PROJECT_UPDATED,
-  TASK_SPENT_TIME_INCREASED,
-  TASK_TRACKING_STARTED,
-  TASK_TRACKING_STOPPED,
-} from '../constants';
+import Task from 'models/Task';
+import { TaskActions } from 'constants/tracker';
 
 export const startTracking = (task: Task) => {
   return {
-    type: TASK_TRACKING_STARTED,
+    type: TaskActions.TRACKING_STARTED,
     payload: task,
   };
 };
 
 export const updateTaskName = (taskName: string) => {
   return {
-    type: TASK_NAME_UPDATED,
+    type: TaskActions.NAME_UPDATED,
     payload: taskName,
   };
 };
 
 export const updateProject = (projectName: string) => {
   return {
-    type: TASK_PROJECT_UPDATED,
+    type: TaskActions.PROJECT_UPDATED,
     payload: projectName,
   };
 };
 
 export const increaseSpentTimeCounter = () => {
   return {
-    type: TASK_SPENT_TIME_INCREASED,
+    type: TaskActions.SPENT_TIME_INCREASED,
   };
 };
 
 export const stopTracking = () => {
   return {
-    type: TASK_TRACKING_STOPPED,
+    type: TaskActions.TRACKING_STOPPED,
   };
 };

@@ -9,7 +9,7 @@ class Main extends React.Component {
     return (
       <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div className="row">
-          <Header />
+          <Header {...this.props}/>
           <Menu />
           {children}
         </div>
